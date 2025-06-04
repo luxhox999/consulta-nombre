@@ -47,6 +47,9 @@
 
       try {
         const res = await fetch(`https://n8n-c2l1.onrender.com/webhook/consulta?rut=${rut}&correo=${correo}`);
+        
+        if (!res.ok) throw new Error('Servidor no respondió correctamente');
+
         const data = await res.json();
 
         document.getElementById('respuesta').innerText =
