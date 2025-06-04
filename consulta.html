@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Consulta de Nombre</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 400px;
+      margin: 50px auto;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+    input, button {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      margin-bottom: 15px;
+    }
+    #respuesta {
+      font-weight: bold;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Consulta de Nombre</h2>
+  <form id="formulario">
+    <label for="rut">RUT:</label>
+    <input type="text" id="rut" name="rut" required>
+
+    <label for="correo">Correo:</label>
+    <input type="email" id="correo" name="correo" required>
+
+    <button type="submit">Consultar</button>
+  </form>
+
+  <div id="respuesta"></div>
+
+  <script>
+    document.getElementById('formulario').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const rut = document.getElementById('rut').value;
+      const correo = document.getElementById('correo').value;
+
+      try {
+        const res = await fetch(`https://n8n-c211.onrender.com/webhook/consulta?rut=${rut}&correo=${correo}`);
+        const data = await res.json();
+
+        document.getElementById('respuesta').innerText =
+          data.nombre ? `Hola ${data.nombre}!` : data.error || 'Error en la consulta.';
+      } catch (err) {
+        document.getElementById('respuesta').innerText = 'Error al conectar con el servidor.';
+      }
+    });
+  </script>
+</body>
+</html>
