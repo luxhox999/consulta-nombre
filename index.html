@@ -46,7 +46,7 @@
       const correo = document.getElementById('correo').value;
 
       try {
-        const res = await fetch(`https://n8n-c2l1.onrender.com/webhook/consulta?rut=${rut}&correo=${correo}`);
+        const res = await fetch(`https://luisviera.app.n8n.cloud/webhook/consulta?rut=${rut}&correo=${correo}`);
         
         if (!res.ok) throw new Error('Servidor no respondió correctamente');
 
