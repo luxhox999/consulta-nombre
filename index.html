@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Consulta de Nombre</title>
+  <title>Consulta de Correo</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -25,13 +25,13 @@
   </style>
 </head>
 <body>
-  <h2>Consulta de Nombre</h2>
+  <h2>Consulta de Correo</h2>
   <form id="formulario">
-    <label for="rut">RUT:</label>
-    <input type="text" id="rut" name="rut" required>
+    <label for="nombre">Nombre:</label>
+    <input type="text" id="nombre" name="nombre" required>
 
-    <label for="correo">Correo:</label>
-    <input type="email" id="correo" name="correo" required>
+    <label for="edad">Edad:</label>
+    <input type="text" id="edad" name="edad" required>
 
     <button type="submit">Consultar</button>
   </form>
@@ -42,18 +42,18 @@
     document.getElementById('formulario').addEventListener('submit', async function(e) {
       e.preventDefault();
 
-      const rut = document.getElementById('rut').value;
-      const correo = document.getElementById('correo').value;
+      const nombre = document.getElementById('nombre').value.trim();
+      const edad = document.getElementById('edad').value.trim();
 
       try {
-        const res = await fetch(`https://luisviera.app.n8n.cloud/webhook/consulta?rut=${rut}&correo=${correo}`);
+        const res = await fetch(`https://luisviera.app.n8n.cloud/webhook/consulta?nombre=${encodeURIComponent(nombre)}&edad=${encodeURIComponent(edad)}`);
         
         if (!res.ok) throw new Error('Servidor no respondió correctamente');
 
         const data = await res.json();
 
         document.getElementById('respuesta').innerText =
-          data.nombre ? `Hola ${data.nombre}!` : data.error || 'Error en la consulta.';
+          data.correo ? `Tu correo es: ${data.correo}` : data.error || 'Error en la consulta.';
       } catch (err) {
         document.getElementById('respuesta').innerText = 'Error al conectar con el servidor.';
       }
