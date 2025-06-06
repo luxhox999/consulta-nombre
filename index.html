@@ -6,37 +6,73 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      max-width: 400px;
-      margin: 50px auto;
-      padding: 20px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
+      background: #f8f8f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
-    input, button {
+    .container {
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      width: 400px;
+      max-width: 90%;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+    input {
       width: 100%;
-      padding: 8px;
-      margin-top: 5px;
-      margin-bottom: 15px;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 15px;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #007bff;
+      border: none;
+      color: white;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
     }
     #respuesta {
-      font-weight: bold;
       margin-top: 20px;
+      font-weight: bold;
+      text-align: center;
+      color: #333;
     }
   </style>
 </head>
 <body>
-  <h2>Consulta de Correo</h2>
-  <form id="formulario">
-    <label for="nombre">Nombre:</label>
-    <input type="text" id="nombre" name="nombre" required>
+  <div class="container">
+    <h2>Consulta de Correo</h2>
+    <form id="formulario">
+      <label for="nombre">Nombre:</label>
+      <input type="text" id="nombre" name="nombre" required>
 
-    <label for="edad">Edad:</label>
-    <input type="text" id="edad" name="edad" required>
+      <label for="edad">Edad:</label>
+      <input type="number" id="edad" name="edad" required>
 
-    <button type="submit">Consultar</button>
-  </form>
+      <button type="submit">Consultar</button>
+    </form>
 
-  <div id="respuesta"></div>
+    <div id="respuesta"></div>
+  </div>
 
   <script>
     document.getElementById('formulario').addEventListener('submit', async function(e) {
@@ -44,6 +80,7 @@
 
       const nombre = document.getElementById('nombre').value.trim();
       const edad = document.getElementById('edad').value.trim();
+      const respuesta = document.getElementById('respuesta');
 
       try {
         const res = await fetch(`https://luisviera.app.n8n.cloud/webhook/consulta?nombre=${encodeURIComponent(nombre)}&edad=${encodeURIComponent(edad)}`);
@@ -52,10 +89,16 @@
 
         const data = await res.json();
 
-        document.getElementById('respuesta').innerText =
-          data.correo ? `Tu correo es: ${data.correo}` : data.error || 'Error en la consulta.';
+        if (!data.correo || data.correo === "no encontrado") {
+          respuesta.textContent = "Nombre o edad incorrectos.";
+          respuesta.style.color = "red";
+        } else {
+          respuesta.textContent = `Tu correo es: ${data.correo}`;
+          respuesta.style.color = "green";
+        }
       } catch (err) {
-        document.getElementById('respuesta').innerText = 'Error al conectar con el servidor.';
+        respuesta.textContent = "Error al conectar con el servidor.";
+        respuesta.style.color = "red";
       }
     });
   </script>
